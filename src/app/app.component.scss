@@ -1,3 +1,9 @@
+.touch-area {
+  width: calc(100% - 60px);
+  margin: auto;
+  padding: 35px 0 45px;
+}
+
 mat-slider {
   .mat-slider-wrapper{
     height: 4px;

@@ -26,13 +26,6 @@ export class AudioService {
     return this.playlist.get(this.index);
   }
 
-  duration(): number {
-    if (!this.playlist.get(this.index)) {
-      return 0;
-    }
-    return this.playlist.get(this.index).duration;
-  }
-
   setPlaylist(playlist: string[]) {
     playlist.forEach((path: string, i: number) => {
       const voice = new Audio(path);

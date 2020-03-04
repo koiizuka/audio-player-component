@@ -56,10 +56,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   duration(): number {
-    if (!this.audio.duration()) {
+    if (!this.audio.currentVoice()) {
       return this.max;
     }
-    return this.audio.duration();
+    return this.audio.currentVoice().duration;
   }
 
   onPause() {

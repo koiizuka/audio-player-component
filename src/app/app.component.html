@@ -4,7 +4,7 @@
 <div class="touch-area" id="touch-area">
   <mat-slider
     min="0"
-    [max]="duration()"
+    [max]="duration$ | async"
     step="0.001"
     [value]="value$ | async"
     (change)="changeValue($event.value)"

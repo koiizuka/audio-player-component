@@ -11,6 +11,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   value$ = new BehaviorSubject<number>(0);
+  duration$ = this.audio.duration$;
 
   private audioSub: Subscription;
   private max = 100;
@@ -23,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private audio: AudioService) {}
 
   ngOnInit() {
-    this.audioSub = this.audio.timeUpdate.subscribe((u: number) => {
+    this.audioSub = this.audio.timeUpdate$.subscribe((u: number) => {
       if (!this.progressDragging) {
         this.value$.next(u);
       }

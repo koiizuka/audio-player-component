@@ -8,7 +8,10 @@ import { take } from 'rxjs/operators';
 export class AudioService {
 
   private timeUpdateSub: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  timeUpdate: Observable<number> = this.timeUpdateSub.asObservable();
+  timeUpdate$: Observable<number> = this.timeUpdateSub.asObservable();
+  private durationSub: BehaviorSubject<number> = new BehaviorSubject<number>(100);
+  duration$: Observable<number> = this.durationSub.asObservable();
+
   bgm: HTMLAudioElement;
 
   private playlist = new Map<number, HTMLAudioElement>();
@@ -35,6 +38,7 @@ export class AudioService {
       const voice = new Audio(path);
       voice.onloadedmetadata = () => this.onLoadedmetadata(voice);
       voice.ontimeupdate = () => this.timeUpdateSub.next(voice.currentTime);
+      voice.oncanplaythrough = () => this.durationSub.next(voice.duration);
       voice.onpause = () => this.onPause(voice);
       voice.onended = () => this.onEnded(voice);
       this.playlist.set(i, voice);

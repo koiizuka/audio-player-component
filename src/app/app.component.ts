@@ -75,6 +75,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateProgress(e: number) {
+    if (!this.audio.currentVoice()) {
+      return;
+    }
     this.progressDragging = true;
     this.value$.next(e);
   }

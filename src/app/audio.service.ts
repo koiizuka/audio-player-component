@@ -70,6 +70,9 @@ export class AudioService {
         if (this.bgm.volume === 0) {
           this.bgm.pause();
           voice.pause();
+          this.index = 0;
+          this.playlist.clear();
+          this.timeUpdateSub.next(0);
         }
       });
     }

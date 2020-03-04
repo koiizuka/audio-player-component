@@ -1,7 +1,10 @@
 .touch-area {
+  display: flex;
+  justify-content: center;
+  align-content: center;
   width: calc(100% - 60px);
   margin: auto;
-  padding: 35px 0 45px;
+  padding: 30px 0;
 }
 
 mat-slider {

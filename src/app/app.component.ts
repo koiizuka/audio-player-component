@@ -1,4 +1,6 @@
-import { Component, ViewEncapsulation, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, ViewEncapsulation, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { AudioService } from './audio.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,45 +8,78 @@ import { Component, ViewEncapsulation, AfterViewInit, Output, EventEmitter } fro
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  max = 100;
+  value$ = new BehaviorSubject<number>(0);
 
-  set value(value: number) {
-    if (!this.progressDragging) {
-      this._value = value;
-    }
-  }
-  get value() {
-    return this._value;
-  }
-  _value = 0;
-
-  @Output() valueChange = new EventEmitter<number>();
-  @Output() inputChange = new EventEmitter<number>();
+  private audioSub: Subscription;
+  private max = 100;
 
   private progressDragging = false;
   private processArea: HTMLElement;
   private processAreaBoundingClientRect: DOMRect;
-  private _touchAreaValue: number;
+  private touchAreaValue: number;
+
+  constructor(private audio: AudioService) {}
+
+  ngOnInit() {
+    this.audioSub = this.audio.timeUpdate.subscribe((u: number) => {
+      if (!this.progressDragging) {
+        this.value$.next(u);
+      }
+    });
+  }
 
   ngAfterViewInit() {
     this.processArea = document.getElementById('touch-area');
     this.registProccesAreaEventHandling();
   }
 
+  ngOnDestroy(): void {
+    this.audioSub.unsubscribe();
+  }
+
+  onPlay() {
+    if (!this.audio.currentVoice()) {
+      this.audio.setPlaylist([
+        '../../assets/first.mp3',
+        '../../assets/first.mp3',
+        '../../assets/second.mp3',
+      ]);
+      this.audio.setBgm('../../assets/bgm.mp3');
+      this.audio.setSe('../../assets/se.mp3');
+    }
+
+    this.audio.bgm.play();
+    this.audio.play();
+  }
+
+  duration(): number {
+    if (!this.audio.duration()) {
+      return this.max;
+    }
+    return this.audio.duration();
+  }
+
+  onPause() {
+    this.audio.pause();
+  }
+
   changeValue(e: number) {
+    if (!this.audio.currentVoice()) {
+      return;
+    }
     this.progressDragging = false;
-    this._value = e;
-    this.valueChange.emit(e);
+    this.value$.next(e);
+    this.audio.currentVoice().currentTime = e;
   }
 
   updateProgress(e: number) {
     this.progressDragging = true;
-    this.inputChange.emit(e);
+    this.value$.next(e);
   }
 
-  registProccesAreaEventHandling() {
+  private registProccesAreaEventHandling() {
     if (!this.processArea) {
       return;
     }
@@ -63,18 +98,17 @@ export class AppComponent implements AfterViewInit {
   }
 
   private handleProcessAreaTouchStart(event) {
-    this._touchAreaValue = this.evaluateXcoordinateToDurationValue(event.touches[0].clientX, this.processAreaBoundingClientRect);
+    this.touchAreaValue = this.evaluateXcoordinateToDurationValue(event.touches[0].clientX, this.processAreaBoundingClientRect);
   }
 
   private handleProcessAreaTouchMove(event) {
-    this._touchAreaValue = this.evaluateXcoordinateToDurationValue(event.touches[0].clientX, this.processAreaBoundingClientRect);
-    this._value = this._touchAreaValue;
-    this.updateProgress(this._touchAreaValue);
+    this.touchAreaValue = this.evaluateXcoordinateToDurationValue(event.touches[0].clientX, this.processAreaBoundingClientRect);
+    this.updateProgress(this.touchAreaValue);
     this.stopProgation(event);
   }
 
   private handleProcessAreaTouchEnd() {
-    this.changeValue(this._touchAreaValue);
+    this.changeValue(this.touchAreaValue);
   }
 
   private evaluateXcoordinateToDurationValue(xCoordinate, AreaBoundingCLientRect) {
@@ -84,7 +118,7 @@ export class AppComponent implements AfterViewInit {
     } else if (durationInPercent > 100) {
       durationInPercent = 100;
     }
-    return this.max * durationInPercent;
+    return this.duration() * durationInPercent;
   }
 
   private stopProgation(event: TouchEvent) {

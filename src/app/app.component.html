@@ -1,10 +1,13 @@
+<button style="width: 20px;height: 20px;background: #ff7d32;margin-right: 10px;" (click)="onPlay()"></button>
+<button style="width: 20px;height: 20px;background: black;margin-right: 10px;" (click)="onPause()"></button>
+
 <div class="touch-area" id="touch-area">
   <mat-slider
     min="0"
-    [max]="max"
+    [max]="duration()"
     step="0.001"
-    [value]="value"
+    [value]="value$ | async"
     (change)="changeValue($event.value)"
     (input)="updateProgress($event.value)">
-  ></mat-slider>
+  </mat-slider>
 </div>

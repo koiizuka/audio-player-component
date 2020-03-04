@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class AudioService {
   bgm: HTMLAudioElement;
 
   private playlist = new Map<number, HTMLAudioElement>();
+  private bgmVolume = 0.3;
   private se: HTMLAudioElement;
   private index = 0;
 
@@ -60,14 +62,22 @@ export class AudioService {
     if (this.hasNext()) {
       this.se.play();
     } else {
-      this.bgm.pause();
-      voice.pause();
+      const msec = 3000;
+      const int = 100;
+      const diff = this.bgmVolume * int / msec;
+      interval(int).pipe(take(msec / int)).subscribe(() => {
+        this.bgm.volume = Math.max(0, this.bgm.volume - diff);
+        if (this.bgm.volume === 0) {
+          this.bgm.pause();
+          voice.pause();
+        }
+      });
     }
   }
 
   setBgm(src: string) {
     this.bgm = new Audio(src);
-    this.bgm.volume = 0.3;
+    this.bgm.volume = this.bgmVolume;
     this.bgm.loop = true;
   }
 

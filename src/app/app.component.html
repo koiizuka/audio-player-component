@@ -1,5 +1,5 @@
-<button style="width: 20px;height: 20px;background: #ff7d32;margin-right: 10px;" (click)="onPlay()"></button>
-<button style="width: 20px;height: 20px;background: black;margin-right: 10px;" (click)="onPause()"></button>
+<button *ngIf="!playing()" style="width: 20px;height: 20px;background: #ff7d32;margin-right: 10px;" (click)="onPlay()"></button>
+<button *ngIf="playing()" style="width: 20px;height: 20px;background: black;margin-right: 10px;" (click)="onPause()"></button>
 
 <div class="touch-area" id="touch-area">
   <mat-slider

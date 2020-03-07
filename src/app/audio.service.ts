@@ -103,6 +103,13 @@ export class AudioService {
     this.bgm.pause();
   }
 
+  playing(): boolean {
+    if (!this.playlist.get(this.index)) {
+      return false;
+    }
+    return !this.playlist.get(this.index).paused;
+  }
+
   private hasNext(): boolean {
     return this.playlist.size > this.index + 1;
   }

@@ -66,6 +66,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.audio.pause();
   }
 
+  playing(): boolean {
+    return this.audio.playing();
+  }
+
   changeValue(e: number) {
     if (!this.audio.currentVoice()) {
       return;

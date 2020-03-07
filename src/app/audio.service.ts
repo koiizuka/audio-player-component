@@ -58,6 +58,9 @@ export class AudioService {
   private onEnded(voice: HTMLAudioElement) {
     if (this.hasNext()) {
       this.se.play();
+    } else if (this.isMobileSafari()) {
+      this.bgm.pause();
+      voice.pause();
     } else {
       const msec = 3000;
       const int = 100;
@@ -100,5 +103,11 @@ export class AudioService {
 
   private hasNext(): boolean {
     return this.playlist.size > this.index + 1;
+  }
+
+  private isMobileSafari(): boolean {
+    const regex = /version\/([\w.]+).+?mobile\/\w+\s(safari)/i; // > [splited UA, Browser Version, BrowserName]
+    const ua = window.navigator.userAgent.toLocaleLowerCase();
+    return !!ua.match(regex);
   }
 }

@@ -2,26 +2,19 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.2.
 
-## Development server
+このプロジェクトはVoicy Tech Story Vol.1にて解説されている、音声プレイヤーコンポーネントのコードです。
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+# Setup
 
-## Code scaffolding
+app.component.tsに記載の通り、 `src/assets` ディレクトリを用意し、
+そこにあなたの `first.mp3`、 `second.mp3`、 `bgm.mp3`、 `se.mp3` を設置してください。
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+その後、 `ng serve --host 0.0.0.0` でサーバーを立ち上げると、
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+# 備考
 
-## Running unit tests
+すまん！間に合わんかった！
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+が、こちらのコンポーネントは Web Componentsとして埋め込めるようにするし、
+HTMLで動的に音声ファイルやBGMを読み込めるようにします！

@@ -59,6 +59,8 @@ export class AudioService {
     if (this.hasNext()) {
       this.se.play();
     } else if (this.isMobileSafari()) {
+      // Mobile SafariはHTMLAudioElementの音量を変更することができないため、
+      // 強制的に音声を停止する
       this.bgm.pause();
       voice.pause();
     } else {

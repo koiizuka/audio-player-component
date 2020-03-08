@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base href="/">
+    <meta charset="utf-8">
+    <title>AngularElementsSample</title>
+
+  </head>
+  <body>
+    <!-- Custom Elementを表示させる -->
+    <v-audio-player
+        id="v-audio-player"
+        bgm="assets/bgm.mp3"
+        se="assets/se.mp3"
+    ></v-audio-player>
+
+    <!-- 出力されたファイルを読み込む -->
+    <script src="js/v-audio-player-es2015.js"></script>
+    <script>
+        var voices = ['assets/first.mp3', 'assets/first.mp3', 'assets/second.mp3'];
+        document.getElementById('v-audio-player').voices = voices;
+    </script>
+  </body>
+</html>

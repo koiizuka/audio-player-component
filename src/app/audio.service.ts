@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, interval } from 'rxjs';
+import { Observable, BehaviorSubject, interval, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Injectable({
@@ -9,7 +9,7 @@ export class AudioService {
 
   private timeUpdateSub: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   timeUpdate$: Observable<number> = this.timeUpdateSub.asObservable();
-  private durationSub: BehaviorSubject<number> = new BehaviorSubject<number>(100);
+  private durationSub: Subject<number> = new Subject<number>();
   duration$: Observable<number> = this.durationSub.asObservable();
 
   bgm: HTMLAudioElement;
@@ -31,7 +31,7 @@ export class AudioService {
       const voice = new Audio(path);
       voice.onloadedmetadata = () => this.onLoadedmetadata(voice);
       voice.ontimeupdate = () => this.timeUpdateSub.next(voice.currentTime);
-      voice.oncanplaythrough = () => this.durationSub.next(voice.duration);
+      voice.onplay = () => this.durationSub.next(voice.duration);
       voice.onpause = () => this.onPause(voice);
       voice.onended = () => this.onEnded(voice);
       this.playlist.set(i, voice);

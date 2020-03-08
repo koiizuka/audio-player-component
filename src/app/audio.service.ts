@@ -31,7 +31,7 @@ export class AudioService {
       const voice = new Audio(path);
       voice.onloadedmetadata = () => this.onLoadedmetadata(voice);
       voice.ontimeupdate = () => this.timeUpdateSub.next(voice.currentTime);
-      voice.onplay = () => this.durationSub.next(voice.duration);
+      voice.onplay = () => this.onPlay(voice);
       voice.onpause = () => this.onPause(voice);
       voice.onended = () => this.onEnded(voice);
       this.playlist.set(i, voice);
@@ -53,6 +53,15 @@ export class AudioService {
       }
       requestAnimationFrame(u);
     });
+  }
+
+  private onPlay(voice: HTMLAudioElement) {
+    const i = setInterval(() => {
+      if (voice.readyState > 0) {
+        this.durationSub.next(voice.duration);
+        clearInterval(i);
+      }
+    }, 100);
   }
 
   private onEnded(voice: HTMLAudioElement) {

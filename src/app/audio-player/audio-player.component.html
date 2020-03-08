@@ -2,11 +2,10 @@
 <button *ngIf="playing()" class="v-audio-player__button pause" (click)="onPause()"></button>
 
 <div class="touch-area" id="touch-area">
-  <!-- TODO: duration()呼び出しはやめたい（最初の音声のdurationをどう取るか、、） -->
   <mat-slider
     class="v-audio-player__progress"
     min="0"
-    [max]="(duration$ | async) ? (duration$ | async) : duration()"
+    [max]="duration$ | async"
     step="0.001"
     [value]="value$ | async"
     (change)="changeValue($event.value)"
